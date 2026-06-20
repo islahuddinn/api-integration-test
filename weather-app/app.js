@@ -1,6 +1,5 @@
-// OpenWeather API Configuration
-const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
-const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+// API endpoint - uses Vercel serverless function in production, Vite proxy in dev
+const API_BASE = '/api/weather';
 
 // DOM Elements
 const cityInput = document.getElementById('cityInput');
@@ -71,20 +70,21 @@ async function fetchWeatherByCity(city) {
     hideWeather();
 
     try {
-        const url = `${BASE_URL}?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`;
+        const url = `${API_BASE}?city=${encodeURIComponent(city)}`;
         const response = await fetch(url);
+
+        const data = await response.json();
 
         if (!response.ok) {
             if (response.status === 404) {
                 throw new Error(`City "${city}" not found. Please check the spelling.`);
-            } else if (response.status === 401) {
-                throw new Error('Invalid API key. Please set a valid OpenWeather API key.');
+            } else if (response.status === 500) {
+                throw new Error(data.error || 'Server error. Please try again later.');
             } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(data.error || `HTTP error! status: ${response.status}`);
             }
         }
 
-        const data = await response.json();
         displayWeather(data);
     } catch (error) {
         showError(error.message);
@@ -100,14 +100,15 @@ async function fetchWeatherByCoords(lat, lon) {
     hideWeather();
 
     try {
-        const url = `${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+        const url = `${API_BASE}?lat=${lat}&lon=${lon}`;
         const response = await fetch(url);
 
+        const data = await response.json();
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(data.error || `HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
         displayWeather(data);
     } catch (error) {
         showError(error.message);
