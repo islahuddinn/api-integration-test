@@ -1,96 +1,130 @@
 # 🌤 Weather Dashboard - API Integration MVP
 
-A real-time weather dashboard built with vanilla JavaScript that integrates with the **OpenWeather API**. This project demonstrates clean API integration, error handling, async/await patterns, and a polished UI.
+A real-time weather dashboard that integrates with the **OpenWeather API**. Built with vanilla JavaScript and deployable to **Vercel** with a serverless API backend to keep your API key secure.
 
 ## 🚀 Live Demo
 
-Simply open `index.html` in any modern browser after adding your API key.
+https://api-integration-test.vercel.app (after deployment)
 
 ## 🛠 Tech Stack
 
 - **Vanilla JavaScript** (ES6+) - No frameworks, no build tools
-- **HTML5** - Semantic markup
-- **CSS3** - Modern layout with Flexbox/Grid, animations, responsive design
+- **HTML5/CSS3** - Semantic markup, responsive design, animations
+- **Vercel Serverless Functions** - API proxy keeps the API key secure
 - **OpenWeather API** - Free weather data provider
 
 ## 📋 Features
 
 - Search weather by city name
-- Quick-select popular cities
+- Quick-select popular cities (London, New York, Tokyo, Dubai, Karachi)
 - Geolocation support (auto-detect your location)
 - Real-time weather data: temperature, humidity, wind, pressure, visibility, sunrise/sunset
 - Loading states and error handling
 - Responsive design (mobile-friendly)
-- Clean, modern UI with animations
 
 ## 🔑 Getting an API Key
 
 1. Go to [https://openweathermap.org/api](https://openweathermap.org/api)
 2. Click **"Sign Up"** and create a free account
 3. Once logged in, go to **"API Keys"** tab in your account dashboard
-4. Copy your default API key (or generate a new one)
-5. The free tier allows **60 calls/minute** and **1,000,000 calls/month** - plenty for testing
+4. Copy your default API key
+5. Free tier: **60 calls/minute**, **1,000,000 calls/month**
 
-## ⚙️ Setup
+## 🖥 Local Development
 
 1. **Clone the repo**
    ```bash
    git clone https://github.com/islahuddinn/api-integration-test.git
-   cd api-integration-test/weather-app
+   cd api-integration-test
    ```
 
-2. **Add your API key**
-   - Open `app.js`
-   - Replace `YOUR_API_KEY_HERE` with your actual OpenWeather API key:
-     ```js
-     const API_KEY = 'your_actual_api_key_here';
-     ```
-
-3. **Open the app**
-   - Double-click `index.html` or serve with any HTTP server:
+2. **Install dependencies**
    ```bash
-   # Using Python
-   python -m http.server 8000
-   
-   # Using Node.js (npx)
-   npx serve .
+   cd weather-app
+   npm install
    ```
+
+3. **Add your API key**
+   Create a `.env` file in the `weather-app/` folder:
+   ```env
+   VITE_OPENWEATHER_API_KEY=your_api_key_here
+   ```
+
+4. **Run the app** (starts both API server and frontend)
+   ```bash
+   npm run dev:api     # Terminal 1: starts API on port 3001
+   npm run dev:frontend # Terminal 2: starts frontend on port 5173
+   ```
+   Then open **http://localhost:5173**
+
+## 🌐 Deploy to Vercel
+
+### Option 1: Deploy via Vercel CLI
+
+1. Install Vercel CLI:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. Deploy from the `weather-app/` directory:
+   ```bash
+   cd weather-app
+   vercel
+   ```
+
+3. When prompted, **add the environment variable**:
+   - Name: `VITE_OPENWEATHER_API_KEY`
+   - Value: `your_api_key_here`
+
+4. Follow the prompts and your app will be live at a URL like `https://api-integration-test.vercel.app`
+
+### Option 2: Deploy via Vercel Dashboard
+
+1. Push this repo to GitHub
+2. Go to [https://vercel.com/new](https://vercel.com/new)
+3. Import your `api-integration-test` repository
+4. Set **Root Directory** to `weather-app`
+5. Under **Environment Variables**, add:
+   - `VITE_OPENWEATHER_API_KEY` = `your_api_key_here`
+6. Click **Deploy**
 
 ## 📁 Project Structure
 
 ```
-weather-app/
-├── index.html      # Main HTML file
-├── style.css       # All styles
-├── app.js          # JavaScript logic & API integration
-└── README.md       # This file
+weather-app/           ← Vercel project root
+├── index.html         # Main page
+├── style.css          # Styles
+├── app.js             # Frontend logic
+├── api/
+│   ├── weather.js     # Serverless function (Vercel)
+│   └── dev-server.js  # Local dev API server
+├── .env               # Local environment variables (gitignored)
+├── .env.example       # Environment variable template
+├── vercel.json        # Vercel configuration
+├── package.json       # Dependencies & scripts
+├── vite.config.js     # Vite dev server config
+└── README.md          # This file
 ```
 
-## 🔌 API Integration Details
+## 🔌 How It Works
 
-**Endpoint:** `https://api.openweathermap.org/data/2.5/weather`
+```mermaid
+sequenceDiagram
+    Browser->>Vercel: GET /api/weather?city=London
+    Vercel->>OpenWeather: GET /data/2.5/weather?q=London&appid=API_KEY
+    OpenWeather-->>Vercel: Weather JSON data
+    Vercel-->>Browser: Weather JSON response
+    Browser->>Browser: Renders weather cards
+```
 
-**Parameters:**
-- `q` - City name (e.g., "London")
-- `lat`/`lon` - Geographic coordinates (for geolocation)
-- `appid` - Your API key
-- `units=metric` - Temperature in Celsius
-
-**Response includes:**
-- Temperature, feels-like, humidity, pressure
-- Wind speed and direction
-- Visibility
-- Sunrise/sunset times (Unix timestamps converted to readable time)
-- Weather condition with icon
+The API key stays **server-side only** - never exposed to the client.
 
 ## 🧪 Error Handling
 
-The app handles:
-- **404** - City not found (typo or non-existent city)
-- **401** - Invalid/missing API key
-- **Network errors** - No internet connection
-- **Geolocation errors** - User denied or unavailable
-- **Empty input** - Validation before API call
+- **404** - City not found
+- **400** - Missing search parameters
+- **500** - Server configuration error (missing API key)
+- **Network errors** - Graceful fallback messages
 
 ## 📸 Screenshot
 
