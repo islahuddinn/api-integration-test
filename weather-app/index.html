@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌤 Weather Dashboard</h1>
+            <p class="subtitle">Real-time weather data from OpenWeather API</p>
+        </header>
+
+        <main>
+            <section class="search-section">
+                <div class="search-box">
+                    <input type="text" id="cityInput" placeholder="Enter city name..." autocomplete="off">
+                    <button id="searchBtn">Search</button>
+                    <button id="geolocateBtn" title="Use my location">📍</button>
+                </div>
+                <div class="quick-cities">
+                    <button class="city-btn" data-city="London">London</button>
+                    <button class="city-btn" data-city="New York">New York</button>
+                    <button class="city-btn" data-city="Tokyo">Tokyo</button>
+                    <button class="city-btn" data-city="Dubai">Dubai</button>
+                    <button class="city-btn" data-city="Karachi">Karachi</button>
+                </div>
+            </section>
+
+            <section class="weather-display" id="weatherDisplay" style="display: none;">
+                <div class="weather-main">
+                    <div class="weather-icon">
+                        <img id="weatherIcon" src="" alt="Weather icon">
+                    </div>
+                    <div class="weather-info">
+                        <h2 id="cityName">--</h2>
+                        <div class="temperature">
+                            <span id="temp">--</span><span>°C</span>
+                        </div>
+                        <p id="weatherDesc">--</p>
+                    </div>
+                </div>
+
+                <div class="weather-details">
+                    <div class="detail-card">
+                        <span class="detail-label">Feels Like</span>
+                        <span class="detail-value" id="feelsLike">--°C</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Humidity</span>
+                        <span class="detail-value" id="humidity">--%</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Wind Speed</span>
+                        <span class="detail-value" id="windSpeed">-- m/s</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Pressure</span>
+                        <span class="detail-value" id="pressure">-- hPa</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Visibility</span>
+                        <span class="detail-value" id="visibility">-- km</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">Sunrise/Sunset</span>
+                        <span class="detail-value" id="sunriseSunset">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-message">
+                    <span id="errorText"></span>
+                </div>
+            </section>
+
+            <section class="loading-section" id="loadingSection" style="display: none;">
+                <div class="spinner"></div>
+                <p>Fetching weather data...</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by <a href="https://openweathermap.org/api" target="_blank">OpenWeather API</a></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
